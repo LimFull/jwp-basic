@@ -1,0 +1,59 @@
+package next.controller;
+
+import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+@WebServlet(urlPatterns = "/", name = "dispatcher", loadOnStartup = 1)
+public class DispatcherServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	private static final Logger logger = LoggerFactory.getLogger(DispatcherServlet.class); 
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		try {
+			logger.info("requested get url = {}", req.getRequestURI());
+			Controller controller = RequestMapping.getController(req.getRequestURI());
+			String url = controller.execute(req, resp);
+			if (url.startsWith("redirect:")) {
+				url = url.substring(9);
+				resp.sendRedirect(url);
+			}else {
+				RequestDispatcher rd = req.getRequestDispatcher(url);
+				rd.forward(req, resp);
+				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		try {
+			logger.info("requested post url = {}", req.getRequestURI());
+			Controller controller = RequestMapping.getController(req.getRequestURI());
+			String url = controller.execute(req, resp);
+			if (url.startsWith("redirect:")) {
+				url = url.substring(9);
+				resp.sendRedirect(url);
+			}else {
+				RequestDispatcher rd = req.getRequestDispatcher(url);
+				rd.forward(req, resp);
+				
+			}
+			
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+}
