@@ -16,9 +16,9 @@ import org.slf4j.LoggerFactory;
 public class DispatcherServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LoggerFactory.getLogger(DispatcherServlet.class); 
-
+	
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try {
 			logger.info("requested get url = {}", req.getRequestURI());
 			Controller controller = RequestMapping.getController(req.getRequestURI());
@@ -36,24 +36,4 @@ public class DispatcherServlet extends HttpServlet {
 		}
 	}
 	
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		try {
-			logger.info("requested post url = {}", req.getRequestURI());
-			Controller controller = RequestMapping.getController(req.getRequestURI());
-			String url = controller.execute(req, resp);
-			if (url.startsWith("redirect:")) {
-				url = url.substring(9);
-				resp.sendRedirect(url);
-			}else {
-				RequestDispatcher rd = req.getRequestDispatcher(url);
-				rd.forward(req, resp);
-				
-			}
-			
-			
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
 }
