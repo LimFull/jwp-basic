@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import core.db.DataBase;
+import next.dao.UserDao;
 import next.model.User;
 
 public class UpdateUserController implements Controller {
@@ -32,7 +33,8 @@ public class UpdateUserController implements Controller {
 	        User updateUser = new User(req.getParameter("userId"), req.getParameter("password"), req.getParameter("name"),
 	                req.getParameter("email"));
 	        log.debug("Update User : {}", updateUser);
-	        user.update(updateUser);
+	        UserDao userDao = new UserDao();
+	        userDao.update(updateUser);
 	        return "redirect:/index";
 		}
 	}

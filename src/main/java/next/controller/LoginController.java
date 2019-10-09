@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import core.db.DataBase;
+import next.dao.UserDao;
 import next.model.User;
 
 public class LoginController implements Controller {
@@ -15,9 +16,11 @@ public class LoginController implements Controller {
 		if(req.getMethod().equals("GET")) {
 			return "/user/login.jsp";
 		}else {
+			UserDao userDao = new UserDao();
 			String userId = req.getParameter("userId");
 	        String password = req.getParameter("password");
-	        User user = DataBase.findUserById(userId);
+	        User user = userDao.findByUserId(userId);
+	        //User user = DataBase.findUserById(userId);
 	        if (user == null) {
 	            req.setAttribute("loginFailed", true);
 	            return "/user/login.jsp";
