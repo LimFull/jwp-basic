@@ -11,42 +11,44 @@ import core.jdbc.ConnectionManager;
 import next.model.User;
 
 public class JdbcTemplate {
-	public void update(String sql, PreparedStatementSetter pss) throws SQLException {
-        Connection con = null;
-        PreparedStatement pstmt = null;
-        try {
-            con = ConnectionManager.getConnection();
-            pstmt = con.prepareStatement(sql);
+	public void update(String sql, PreparedStatementSetter pss) throws DataAccessException {
+        
+        try (Connection con = ConnectionManager.getConnection();
+        		PreparedStatement pstmt = con.prepareStatement(sql)){
             pss.setValue(pstmt);
-
             pstmt.executeUpdate();
-        } finally {
-            if (pstmt != null) {
-                pstmt.close();
-            }
-
-            if (con != null) {
-                con.close();
-            }
+        } catch (SQLException e) {
+        	throw new DataAccessException(e);
         }
     }
+	
+	// 가변인자 update
+	public void update(String sql, Object... parameters) throws DataAccessException{
+		try(Connection con = ConnectionManager.getConnection();
+				PreparedStatement pstmt = con.prepareStatement(sql)){
+			for (int i=0; i<parameters.length; i++) {
+				pstmt.setObject(i+1, parameters[i]);
+			}
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			throw new DataAccessException(e);
+		}
+	}
 	
 	public List query(String sql, PreparedStatementSetter pss, RowMapper rowMapper) throws SQLException {
 		Connection con = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         
-        List<User> users = null;
+        List<Object> users = null;
         try {
         	con = ConnectionManager.getConnection();
         	pstmt = con.prepareStatement(sql);
         	pss.setValue(pstmt);
         	rs = pstmt.executeQuery();
-        	User user;
-        	users = new ArrayList<User>();
+        	users = new ArrayList<Object>();
         	while(rs.next()) {
-        		user = (User) rowMapper.mapRow(rs);//new User(rs.getString("userId"), rs.getString("password"), rs.getString("name"), rs.getString("email"));
-        		users.add(user);
+        		users.add(rowMapper.mapRow(rs));
         	}
         } finally {
         	if (rs != null) {
