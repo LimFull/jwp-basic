@@ -49,12 +49,12 @@ public class UserDao {
 
     public User findByUserId(String userId) throws SQLException {
     	JdbcTemplate jt = new JdbcTemplate();
-    	RowMapper rowMapper = new RowMapper(){
+    	/*RowMapper rowMapper = new RowMapper(){
     		@Override
     		public User mapRow(ResultSet rs) throws SQLException {
     			return new User(rs.getString("userId"), rs.getString("password"), rs.getString("name"), rs.getString("email"));
     		}
-    	};
+    	};*/
     	
     	PreparedStatementSetter pss = new PreparedStatementSetter() {	
 			@Override
@@ -67,7 +67,10 @@ public class UserDao {
 
     	
     	String sql = "SELECT userId, password, name, email FROM USERS WHERE userid=?";
-        return jt.queryForObject(sql, pss, rowMapper);
+        //return jt.queryForObject(sql, pss, rowMapper);
+    	return jt.queryForObject(sql, pss, (ResultSet rs) -> {
+    		return new User(rs.getString("userId"), rs.getString("password"), rs.getString("name"), rs.getString("email"));
+    	});
         
         
     }
