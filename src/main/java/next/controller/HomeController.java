@@ -10,11 +10,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import core.db.DataBase;
+import next.dao.QuestionDao;
 
 public class HomeController implements Controller {
 	@Override
 	public String execute(HttpServletRequest req, HttpServletResponse resp) throws Exception{
-		req.setAttribute("users", DataBase.findAll());
+		QuestionDao questionDao = new QuestionDao();
+		System.out.println("home");
+		req.setAttribute("questions", questionDao.findAll());
         return "/index.jsp";
 	}
     

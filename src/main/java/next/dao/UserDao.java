@@ -68,7 +68,7 @@ public class UserDao {
     	
     	String sql = "SELECT userId, password, name, email FROM USERS WHERE userid=?";
         //return jt.queryForObject(sql, pss, rowMapper);
-    	return jt.queryForObject(sql, pss, (ResultSet rs) -> {
+    	return (User) jt.queryForObject(sql, pss, (ResultSet rs) -> {
     		return new User(rs.getString("userId"), rs.getString("password"), rs.getString("name"), rs.getString("email"));
     	});
         
