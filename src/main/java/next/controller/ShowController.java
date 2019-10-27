@@ -3,6 +3,7 @@ package next.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import next.dao.AnswerDao;
 import next.dao.QuestionDao;
 
 public class ShowController implements Controller{
@@ -12,6 +13,8 @@ public class ShowController implements Controller{
 		QuestionDao questionDao = new QuestionDao();
 		request.setAttribute("question", questionDao.findById(questionId));
 		//AnswerDao 추가
+		AnswerDao answerDao = new AnswerDao();
+		request.setAttribute("answers", answerDao.findAllByQuestionId(questionId));
 		return "/qna/show.jsp";
 	}
 }

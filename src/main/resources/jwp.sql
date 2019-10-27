@@ -23,7 +23,7 @@ CREATE TABLE QUESTIONS(
 	PRIMARY KEY		(questionId)
 );
 
-INSERT INTO QUESTIONS VALUES(1, '임풀', '코딩이 가득한 코딩노트', 'sql과 jstl을 이용해 게시글을 등록해보자', systimestamp, 0);
+INSERT INTO QUESTIONS VALUES(1, '임풀', '코딩이 가득한 코딩노트', 'sql과 jstl을 이용해 게시글을 등록해보자', systimestamp, 1);
 
 DROP TABLE IF EXISTS ANSWERS;
 
@@ -35,3 +35,5 @@ CREATE TABLE ANSWERS (
 	questionId		bigint			NOT NULL,
 	PRIMARY KEY		(answerId)
 );
+
+INSERT INTO ANSWERS VALUES(1, '임가득', '정말 유용한 정보로군요!', systimestamp, 1);

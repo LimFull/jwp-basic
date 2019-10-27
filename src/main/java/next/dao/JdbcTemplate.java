@@ -35,6 +35,22 @@ public class JdbcTemplate {
 		}
 	}
 	
+	public void update(PreparedStatementCreator psc, KeyHolder holder) {
+		try (Connection con = ConnectionManager.getConnection()){
+			PreparedStatement ps = psc.createPreparedStatement(con);
+			ps.executeUpdate();
+			
+			ResultSet rs = ps.getGeneratedKeys();
+			if(rs.next()) {
+				holder.setId(rs.getLong(1));
+			}
+			rs.close();
+			
+		} catch (SQLException e) {
+			throw new DataAccessException(e);
+		}
+	}
+	
 	public List query(String sql, RowMapper rowMapper, Object... parameters) throws SQLException {
 		return query(sql, createPreparedStatementSetter(parameters), rowMapper);
 	}

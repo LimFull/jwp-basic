@@ -55,7 +55,7 @@
 					<div class="qna-comment-slipp">
 						<p class="qna-comment-count"><strong>${question.countOfAnswer}</strong>개의 의견</p>
 						<div class="qna-comment-slipp-articles">
-<!-- 
+
 							<c:forEach items="${answers}" var="each">
 							<article class="article">
 								<div class="article-header">
@@ -85,7 +85,7 @@
 								</div>
 							</article>
                             </c:forEach>
-                             -->
+                       
 							<div class="answerWrite">
 								<form name="answer" method="post">
 									<input type="hidden" name="questionId" value="${question.questionId}">
